@@ -226,7 +226,7 @@ func testRunGithubSource(t *T) {
 			return outp, errors.New("there should be no unknown in the micro status output")
 		}
 		return outp, nil
-	}, 60*time.Second); err != nil {
+	}, 360*time.Second); err != nil {
 		return
 	}
 
