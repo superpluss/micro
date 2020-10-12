@@ -198,6 +198,7 @@ func testRunGithubSource(t *T) {
 	}
 
 	cmd := serv.Command()
+	t.Logf("Running helloworld")
 	outp, err := cmd.Exec("run", "--image", "localhost:5000/cells:v3", "github.com/micro/services/helloworld@"+branch)
 	if err != nil {
 		t.Fatalf("micro run failure, output: %v", string(outp))
@@ -205,18 +206,23 @@ func testRunGithubSource(t *T) {
 	}
 
 	if err := Try("Find helloworld in runtime", t, func() ([]byte, error) {
+		t.Logf("Looking for helloworld")
 		outp, err = cmd.Exec("status")
 		if err != nil {
+			t.Logf("Err 1 %s", string(outp))
 			return outp, err
 		}
 
 		if !statusRunning("helloworld", version, outp) {
+			t.Logf("No helloworld %s", string(outp))
 			return outp, errors.New("Output should contain helloworld")
 		}
 		if !strings.Contains(string(outp), "owner=admin") || !(strings.Contains(string(outp), "group=micro") || strings.Contains(string(outp), "group="+serv.Env())) {
+			t.Logf("Incorrect owner or group %s", string(outp))
 			return outp, errors.New("micro status does not have correct owner or group")
 		}
 		if strings.Contains(string(outp), "unknown") {
+			t.Logf("Unknown %s", string(outp))
 			return outp, errors.New("there should be no unknown in the micro status output")
 		}
 		return outp, nil
@@ -227,9 +233,11 @@ func testRunGithubSource(t *T) {
 	if err := Try("Find helloworld in registry", t, func() ([]byte, error) {
 		outp, err = cmd.Exec("services")
 		if err != nil {
+			t.Logf("Err 2 %s", string(outp))
 			return outp, err
 		}
 		if !strings.Contains(string(outp), "helloworld") {
+			t.Logf("No helloworld in services %s", string(outp))
 			return outp, errors.New("helloworld is not running")
 		}
 		return outp, nil
@@ -240,20 +248,24 @@ func testRunGithubSource(t *T) {
 	if err := Try("Call helloworld", t, func() ([]byte, error) {
 		outp, err := cmd.Exec("call", "helloworld", "Helloworld.Call", "{\"name\":\"John\"}")
 		if err != nil {
+			t.Logf("Call helloworld error %s", string(outp))
 			return outp, err
 		}
 		rsp := map[string]string{}
 		err = json.Unmarshal(outp, &rsp)
 		if err != nil {
+			t.Logf("JSON marshal error %s", string(outp))
 			return outp, err
 		}
 		if rsp["msg"] != "Hello John" {
+			t.Logf("Resp not right %s", rsp["msg"])
 			return outp, errors.New("Helloworld resonse is unexpected")
 		}
 		return outp, err
 	}, 60*time.Second); err != nil {
 		return
 	}
+	t.Logf("done")
 
 }
 
