@@ -241,7 +241,7 @@ func testRunGithubSource(t *T) {
 			return outp, errors.New("helloworld is not running")
 		}
 		return outp, nil
-	}, 180*time.Second); err != nil {
+	}, 360*time.Second); err != nil {
 		return
 	}
 
