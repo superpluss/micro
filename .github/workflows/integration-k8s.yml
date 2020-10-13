@@ -133,4 +133,4 @@ jobs:
         IN_TRAVIS_CI: yes
         GITHUB_PAT: ${{ secrets.MICRO_ACTIONS_PAT }}
       run: |
-        go clean -testcache && GOMAXPROCS=4 go test --tags=integration,kind -v -run ./... -timeout 20m
+        go clean -testcache && MICRO_TEST_TIMEOUT=6m GOMAXPROCS=4 go test --tags=integration,kind -v -run ./... -timeout 20m
