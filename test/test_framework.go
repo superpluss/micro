@@ -515,7 +515,7 @@ func TrySuite(t *testing.T, f func(t *T), times int) {
 	timeout := os.Getenv("MICRO_TEST_TIMEOUT")
 	td, err := time.ParseDuration(timeout)
 	if err != nil {
-		td = 3 * time.Minute
+		td = 5 * time.Minute
 	}
 	timeoutCh := time.After(td)
 	done := make(chan bool)
