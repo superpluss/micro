@@ -134,3 +134,7 @@ jobs:
         GITHUB_PAT: ${{ secrets.MICRO_ACTIONS_PAT }}
       run: |
         go clean -testcache && MICRO_TEST_TIMEOUT=6m GOMAXPROCS=4 go test --tags=integration,kind -v -run ./... -timeout 20m
+    - name: Show kind output
+      run: |
+        kubectl get po -n testrungithubsource
+        kubectl logs -l=name=helloworld -n testrungithubsource
