@@ -89,20 +89,6 @@ jobs:
       env:
         TMPDIR: ${{ runner.temp }}
       run: |
-        helm repo add cilium https://helm.cilium.io/
-        docker pull cilium/cilium:v1.8.4
-        kind load docker-image cilium/cilium:v1.8.4
-        helm install cilium cilium/cilium --version 1.8.4 \
-           --namespace kube-system \
-           --set global.nodeinit.enabled=true \
-           --set global.kubeProxyReplacement=partial \
-           --set global.hostServices.enabled=false \
-           --set global.externalIPs.enabled=true \
-           --set global.nodePort.enabled=true \
-           --set global.hostPort.enabled=true \
-           --set config.bpfMasquerade=false \
-           --set global.pullPolicy=IfNotPresent \
-           --set config.ipam=kubernetes
         bash scripts/kind-launch.sh
     - name: Install failed, show platform logs
       if: ${{ failure() }}
@@ -147,7 +133,7 @@ jobs:
         IN_TRAVIS_CI: yes
         GITHUB_PAT: ${{ secrets.MICRO_ACTIONS_PAT }}
       run: |
-        go clean -testcache && MICRO_TEST_TIMEOUT=6m GOMAXPROCS=4 go test --tags=integration,kind -v -run ./... -timeout 20m
+        go clean -testcache && GOMAXPROCS=4 go test --tags=integration,kind -v -run ./... -timeout 20m
     - name: Show kind output
       if: ${{ failure() }}
       run: |

@@ -15,21 +15,6 @@ docker run -d -p 5000:5000 --restart=always --name kind-registry -v /tmp/docker-
 ./scripts/kind-build-micro.sh
 
 kind create cluster --config ./scripts/kind/kind-config.yaml
-helm repo add cilium https://helm.cilium.io/
-docker pull cilium/cilium:v1.8.4
-kind load docker-image cilium/cilium:v1.8.4
-helm install cilium cilium/cilium --version 1.8.4 \
-   --namespace kube-system \
-   --set global.nodeinit.enabled=true \
-   --set global.kubeProxyReplacement=partial \
-   --set global.hostServices.enabled=false \
-   --set global.externalIPs.enabled=true \
-   --set global.nodePort.enabled=true \
-   --set global.hostPort.enabled=true \
-   --set config.bpfMasquerade=false \
-   --set global.pullPolicy=IfNotPresent \
-   --set config.ipam=kubernetes
-
 
 docker network connect "kind" "kind-registry"
 
