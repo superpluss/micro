@@ -59,6 +59,10 @@ type config struct {
 	Comments []string
 	// Plugins registry=etcd:broker=nats
 	Plugins []string
+	// package prefix
+	PkgPrefix string
+	// go version
+	GoVersion string
 }
 
 type file struct {
@@ -213,6 +217,7 @@ func Run(ctx *cli.Context) {
 	dir := ctx.Args().First()
 	useGoPath := ctx.Bool("gopath")
 	useGoModule := os.Getenv("GO111MODULE")
+	pkgPrefix := ctx.String("pkg_prefix")
 	var plugins []string
 
 	if len(dir) == 0 {
@@ -244,6 +249,10 @@ func Run(ctx *cli.Context) {
 	if len(atype) > 0 {
 		command += " --type=" + atype
 	}
+	if len(pkgPrefix) > 0 {
+		command += " --pkg_prefix=" + pkgPrefix
+	}
+
 	if plugins := ctx.StringSlice("plugin"); len(plugins) > 0 {
 		command += " --plugin=" + strings.Join(plugins, ":")
 	}
@@ -313,6 +322,7 @@ func Run(ctx *cli.Context) {
 		UseGoPath: useGoPath,
 		Plugins:   plugins,
 		Comments:  protoComments(goDir, alias),
+		PkgPrefix: pkgPrefix,
 	}
 
 	switch atype {
@@ -422,6 +432,10 @@ func Commands() []*cli.Command {
 				&cli.BoolFlag{
 					Name:  "gopath",
 					Usage: "Create the service in the gopath.",
+				},
+				&cli.StringFlag{
+					Name:  "pkg_prefix",
+					Usage: "package prefix",
 				},
 			},
 			Action: func(c *cli.Context) error {

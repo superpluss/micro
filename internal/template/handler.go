@@ -6,7 +6,7 @@ var (
 import (
 	"context"
 
-	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
+	{{dehyphen .Alias}} "{{.PkgPrefix}}/{{.Dir}}/proto/{{.Alias}}"
 )
 
 type {{title .Alias}} struct{}
@@ -25,7 +25,7 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
+	{{dehyphen .Alias}} "{{.PkgPrefix}}/{{.Dir}}/proto/{{.Alias}}"
 )
 
 type {{title .Alias}} struct{}
@@ -75,7 +75,7 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
+	{{dehyphen .Alias}} "{{.PkgPrefix}}/{{.Dir}}/proto/{{.Alias}}"
 )
 
 type {{title .Alias}} struct{}
@@ -92,7 +92,7 @@ import (
 	"context"
 	log "github.com/micro/go-micro/v2/logger"
 
-	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
+	{{dehyphen .Alias}} "{{.PkgPrefix}}/{{.Dir}}/proto/{{.Alias}}"
 )
 
 type {{title .Alias}} struct{}
@@ -115,7 +115,7 @@ import (
 	"encoding/json"
 	log "github.com/micro/go-micro/v2/logger"
 
-	"{{.Dir}}/client"
+	"{{.PkgPrefix}}/{{.Dir}}/client"
 	"github.com/micro/go-micro/v2/errors"
 	api "github.com/micro/go-micro/v2/api/proto"
 	{{dehyphen .Alias}} "path/to/service/proto/{{.Alias}}"

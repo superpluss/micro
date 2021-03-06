@@ -6,8 +6,8 @@ var (
 import (
   log	"github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2"
-	"{{.Dir}}/handler"
-	"{{.Dir}}/subscriber"
+	"{{.PkgPrefix}}/{{.Dir}}/handler"
+	"{{.PkgPrefix}}/{{.Dir}}/subscriber"
 )
 
 func main() {
@@ -38,8 +38,8 @@ func main() {
 import (
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2"
-	"{{.Dir}}/handler"
-	"{{.Dir}}/subscriber"
+	"{{.PkgPrefix}}/{{.Dir}}/handler"
+	"{{.PkgPrefix}}/{{.Dir}}/subscriber"
 
 	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
 )
@@ -72,8 +72,8 @@ import (
 	log "github.com/micro/go-micro/v2/logger"
 
 	"github.com/micro/go-micro/v2"
-	"{{.Dir}}/handler"
-	"{{.Dir}}/client"
+	"{{.PkgPrefix}}/{{.Dir}}/handler"
+	"{{.PkgPrefix}}/{{.Dir}}/client"
 
 	{{dehyphen .Alias}} "{{.Dir}}/proto/{{.Alias}}"
 )
@@ -106,7 +106,7 @@ import (
         log "github.com/micro/go-micro/v2/logger"
 	      "net/http"
         "github.com/micro/go-micro/v2/web"
-        "{{.Dir}}/handler"
+        "{{.PkgPrefix}}/{{.Dir}}/handler"
 )
 
 func main() {

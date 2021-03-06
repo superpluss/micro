@@ -1,13 +1,14 @@
 package main
 
 import (
+	"github.com/netdata/go-orchestrator/plugin"
 	"os"
 	"path"
 
+	"github.com/jessevdk/go-flags"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
-	plugin "github.com/micro/micro/v2/service/debug/collector/micro"
-	"github.com/netdata/go-orchestrator"
+	mp "github.com/micro/micro/v2/service/debug/collector/micro"
 	"github.com/netdata/go-orchestrator/cli"
 	"github.com/netdata/go-orchestrator/pkg/multipath"
 )
@@ -40,23 +41,25 @@ func main() {
 		log.Fatal(service.Run())
 	}()
 
-	// register the new plugin
-	plugin.New(service.Client()).Register()
+	// register the new mp
+	mp.New(service.Client()).Register()
 
-	netdata := orchestrator.New()
-	netdata.Name = "micro.d"
-	netdata.Option = &cli.Option{
-		UpdateEvery: 1,
-		Debug:       true,
-		Module:      "all",
-		ConfigDir:   netdataConfig,
-		Version:     false,
-	}
-	netdata.ConfigPath = netdataConfig
-
-	if !netdata.Setup() {
-		log.Fatal("Netdata failed to Setup()")
+	opt, err := cli.Parse(os.Args)
+	if err != nil {
+		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.ErrHelp {
+			os.Exit(0)
+		}
+		os.Exit(1)
 	}
 
-	netdata.Serve()
+	p := plugin.New(plugin.Config{
+		Name:              "micro.d",
+		ConfDir:           netdataConfig,
+		ModulesConfDir:    netdataConfig,
+		ModulesSDConfPath: opt.WatchPath,
+		RunModule:         opt.Module,
+		MinUpdateEvery:    opt.UpdateEvery,
+	})
+
+	p.Run()
 }
